@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#45090b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ganpati Invitation">
+    <title>Ganpati Invitation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Opening Screen -->
+    <div id="loadingScreen">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <div class="confetti">
+            <span>🌸</span>
+            <span>🪔</span>
+            <span>✨</span>
+            <span>🌼</span>
+            <span>🥁</span>
+            <span>🌺</span>
+        </div>
+
+        <div class="opening-card">
+            <p class="opening-tag">॥ श्री गणेशाय नमः ॥</p>
+            <h1>Ganpati Bappa<br><em>Morya!</em></h1>
+            <p class="opening-text">You're invited to celebrate Ganesh Chaturthi with the Dalvi family — blessings, modaks &amp; good vibes await.</p>
+            <button id="openInvitation">Open Invitation&nbsp;✨</button>
+        </div>
+    </div>
+
+    <!-- Main Website -->
+    <main id="mainContent">
+
+        <div class="backdrop">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+            <div class="float-bits">
+                <span>🪔</span>
+                <span>✨</span>
+                <span>🌸</span>
+                <span>🕉️</span>
+                <span>✨</span>
+                <span>🌼</span>
+                <span>🪔</span>
+                <span>🌺</span>
+            </div>
+        </div>
+
+        <div class="deck" id="cardDeck">
+
+            <!-- 1 · Hero -->
+            <section class="swipe-card card-hero" id="hero">
+                <span class="chip">✨ Welcome</span>
+                <div class="ganesha-wrap">
+                    <div class="rays"></div>
+                    <img src="ganesha.png" alt="Lord Ganesha" class="ganesha">
+                    <span class="spark s1">✨</span>
+                    <span class="spark s2">✨</span>
+                    <span class="spark s3">⭐</span>
+                </div>
+                <p class="shloka">॥ श्री गणेशाय नमः ॥</p>
+                <h1>Ganpati Bappa <em>Morya</em></h1>
+                <p class="lead">
+                    You and your family are warmly invited to
+                    celebrate Ganesh Chaturthi with us.
+                </p>
+                <button id="enterBtn">Let's Go&nbsp;→</button>
+            </section>
+
+            <!-- 2 · Invitation -->
+            <section class="swipe-card card-invite" id="invitation">
+                <span class="corner c1">🌺</span>
+                <span class="corner c2">🌺</span>
+                <span class="corner c3">🌼</span>
+                <span class="corner c4">🌼</span>
+                <span class="chip">💌 निमंत्रण</span>
+                <h2>सस्नेह निमंत्रण</h2>
+                <div class="divider"><span>🌺</span></div>
+                <p class="marathi">
+                    आपणांस कळविण्यात अत्यंत आनंद होत आहे कि सालाबादप्रमाणे श्री गणेश उत्सवानिमित्त आमच्या घरी गणरायाचे आगमन होणार आहे. तरी आपण सहपरिवार व मित्रमंडळीसह श्री गणरायाचा आशीर्वाद व दर्शनाचा लाभ घ्यावा हि नम्र विनंती !
+                </p>
+            </section>
+
+            <!-- 3 · Event Details -->
+            <section class="swipe-card card-event">
+                <span class="chip">📅 Save the Date</span>
+                <h2>Event Details</h2>
+                <div class="detail-grid">
+                    <div class="detail">
+                        <span class="detail-icon">📅</span>
+                        <h3>Date</h3>
+                        <p>14 September 2026</p>
+                    </div>
+                    <div class="detail">
+                        <span class="detail-icon">🕙</span>
+                        <h3>Time</h3>
+                        <p>10:00 AM onwards</p>
+                    </div>
+                    <div class="detail detail-wide">
+                        <span class="detail-icon">📍</span>
+                        <h3>Venue</h3>
+                        <p>Malewadi, Shahuwadi, Kolhapur</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4 · Gallery -->
+            <section class="swipe-card card-gallery" id="gallery">
+                <span class="chip">📸 Memories</span>
+                <h2>Ganpati Memories</h2>
+                <div class="slider">
+                    <button class="prev" aria-label="Previous photo">&#10094;</button>
+                    <div class="photo-frame">
+                        <img id="sliderImage" src="gallery1.JPG" alt="Gallery">
+                    </div>
+                    <button class="next" aria-label="Next photo">&#10095;</button>
+                    <span class="photo-count" id="photoCount">1 / 9</span>
+                </div>
+                <p class="hint-text">A few moments from past celebrations</p>
+            </section>
+
+            <!-- 5 · Program Schedule -->
+            <section class="swipe-card card-schedule" id="schedule">
+                <span class="chip">🪔 Schedule</span>
+                <h2>Program Schedule</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="t-emoji">🙏</div>
+                        <div class="t-body">
+                            <h3>गणपती स्थापना</h3>
+                            <p>14 September 2026 · 10:00 AM</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="t-emoji">🛕</div>
+                        <div class="t-body">
+                            <h3>वार्षिक सत्यनारायण पूजा</h3>
+                            <p>15 September 2026 · 2:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="t-emoji">🌅</div>
+                        <div class="t-body">
+                            <h3>Morning Aarti</h3>
+                            <p>Every day · 10:00 AM</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="t-emoji">🪔</div>
+                        <div class="t-body">
+                            <h3>Evening Aarti</h3>
+                            <p>Every day · 7:30 PM</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="t-emoji">🪷</div>
+                        <div class="t-body">
+                            <h3>गौरी आगमन</h3>
+                            <p>17 September 2026 · 7:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="t-emoji">🌊</div>
+                        <div class="t-body">
+                            <h3>गौरी गणपती विसर्जन</h3>
+                            <p>19 September 2026 · 2:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6 · Location -->
+            <section class="swipe-card card-location" id="location">
+                <span class="chip">🗺️ Find Us</span>
+                <h2>Event Location</h2>
+                <p class="address">
+                    Village Malewadi · Taluka Shahuwadi<br>
+                    District Kolhapur, Maharashtra
+                </p>
+                <div class="map-frame">
+                    <iframe
+                        src="https://www.google.com/maps?q=Malewadi+Shahuwadi+Kolhapur&output=embed"
+                        width="100%"
+                        height="300"
+                        allowfullscreen=""
+                        loading="lazy">
+                    </iframe>
+                </div>
+                <a href="https://maps.google.com/?q=Malewadi+Shahuwadi+Kolhapur"
+                   target="_blank"
+                   class="mapBtn">
+                   📍 Get Directions
+                </a>
+            </section>
+
+            <!-- 7 · Host Family -->
+            <section class="swipe-card card-host" id="host">
+                <span class="chip">🙏 निमंत्रक</span>
+                <h2>Dalvi Family</h2>
+                <p class="lead">
+                    We cordially invite you and your family to seek the
+                    blessings of Lord Ganesha and grace the occasion
+                    with your presence.
+                </p>
+                <div class="host-card">
+                    <p class="host-name">Shri. D. N. Dalvi &amp; Family</p>
+                    <div class="host-tags">
+                        <span>🏡 Malewadi</span>
+                        <span>📌 Shahuwadi</span>
+                        <span>🗺️ Kolhapur</span>
+                        <span>🚩 Maharashtra</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8 · Thank You -->
+            <footer class="swipe-card card-thanks footer">
+                <span class="chip chip-light">🧡 Thank You</span>
+                <h2>See you there!</h2>
+                <p class="lead">
+                    We look forward to celebrating Ganesh Chaturthi
+                    with you and your family.
+                </p>
+                <h3 class="big-morya">Ganpati Bappa Morya!</h3>
+                <p class="copyright">
+                    © 2026 Dalvi Family · Made with 🧡 for Ganesh Chaturthi
+                </p>
+            </footer>
+
+        </div>
+
+        <!-- Deck Navigation -->
+        <div class="deck-ui">
+            <button class="deck-arrow" id="deckPrev" aria-label="Previous card">&#10094;</button>
+            <div class="deck-dots" id="deckDots"></div>
+            <button class="deck-arrow" id="deckNext" aria-label="Next card">&#10095;</button>
+        </div>
+
+        <div class="swipe-hint" id="swipeHint">&#8676; swipe &#8677;</div>
+
+    </main>
+
+    <a href="https://wa.me/918691066143"
+       class="whatsapp-float"
+       target="_blank"
+       aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Motion (vanilla build of Framer Motion) -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

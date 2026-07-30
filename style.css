@@ -1,0 +1,1237 @@
+/* ==========================================================
+   Ganpati Invitation · Card Swipe UI
+   Fun, clean & modern
+   ========================================================== */
+
+:root {
+    --bg-1: #45090b;
+    --bg-2: #8a1c03;
+    --surface: #fff9ec;
+    --ink: #4a150c;
+    --muted: #9a6247;
+    --saffron: #ff8f2e;
+    --saffron-deep: #f2600c;
+    --gold: #ffc23e;
+    --red: #e23a2e;
+    --crimson: #b81f1f;
+    --marigold: #f7b32b;
+    --tangerine: #fb8500;
+    --card-radius: 34px;
+    --shadow-card: 0 24px 60px rgba(46, 8, 4, 0.55);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 60%, #5c1206 100%);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow: hidden;
+    height: 100dvh;
+}
+
+h1, h2, h3 {
+    font-family: 'Baloo 2', 'Poppins', sans-serif;
+    line-height: 1.15;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ==========================================================
+   Floating backdrop orbs (shared by opening screen & deck)
+   ========================================================== */
+
+.backdrop {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.5;
+    animation: drift 14s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+.orb-1 {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, var(--saffron), transparent 70%);
+    top: -140px;
+    left: -100px;
+}
+
+.orb-2 {
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, var(--gold), transparent 70%);
+    bottom: -120px;
+    right: -80px;
+    animation-delay: -5s;
+}
+
+.orb-3 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--red), transparent 70%);
+    top: 40%;
+    left: 55%;
+    animation-delay: -9s;
+}
+
+@keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(50px, -40px) scale(1.15); }
+}
+
+/* Festive emoji slowly rising behind the cards */
+.float-bits {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.float-bits span {
+    position: absolute;
+    bottom: -60px;
+    font-size: 24px;
+    opacity: 0;
+    animation: riseUp linear infinite;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+}
+
+.float-bits span:nth-child(1) { left: 4%;  animation-duration: 16s; animation-delay: 0s; }
+.float-bits span:nth-child(2) { left: 15%; animation-duration: 20s; animation-delay: -6s;  font-size: 17px; }
+.float-bits span:nth-child(3) { left: 28%; animation-duration: 18s; animation-delay: -11s; }
+.float-bits span:nth-child(4) { left: 46%; animation-duration: 22s; animation-delay: -3s;  font-size: 20px; }
+.float-bits span:nth-child(5) { left: 60%; animation-duration: 17s; animation-delay: -14s; font-size: 16px; }
+.float-bits span:nth-child(6) { left: 73%; animation-duration: 21s; animation-delay: -8s; }
+.float-bits span:nth-child(7) { left: 86%; animation-duration: 19s; animation-delay: -16s; font-size: 19px; }
+.float-bits span:nth-child(8) { left: 94%; animation-duration: 23s; animation-delay: -5s;  font-size: 22px; }
+
+@keyframes riseUp {
+    0%   { transform: translateY(0) rotate(0deg);        opacity: 0; }
+    8%   { opacity: 0.7; }
+    92%  { opacity: 0.7; }
+    100% { transform: translateY(-115vh) rotate(30deg);  opacity: 0; }
+}
+
+/* ==========================================================
+   Opening screen
+   ========================================================== */
+
+#loadingScreen {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 9999;
+    overflow: hidden;
+    background-image:
+        linear-gradient(160deg, rgba(69, 9, 11, 0.92) 0%, rgba(138, 28, 3, 0.88) 60%, rgba(92, 18, 6, 0.94) 100%),
+        url('gallery1.JPG');
+    background-size: cover, cover;
+    background-position: center;
+    transition: opacity 0.7s ease, transform 0.7s ease, visibility 0.7s ease;
+}
+
+#loadingScreen.screen-fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.04);
+}
+
+.confetti {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.confetti span {
+    position: absolute;
+    top: -60px;
+    font-size: 26px;
+    opacity: 0.85;
+    animation: fall linear infinite;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+.confetti span:nth-child(1) { left: 8%;  animation-duration: 9s; }
+.confetti span:nth-child(2) { left: 24%; animation-duration: 12s; animation-delay: -3s; }
+.confetti span:nth-child(3) { left: 42%; animation-duration: 8s;  animation-delay: -6s; }
+.confetti span:nth-child(4) { left: 60%; animation-duration: 11s; animation-delay: -2s; }
+.confetti span:nth-child(5) { left: 76%; animation-duration: 10s; animation-delay: -8s; }
+.confetti span:nth-child(6) { left: 90%; animation-duration: 9s;  animation-delay: -4s; }
+
+@keyframes fall {
+    from { transform: translateY(-80px) rotate(0deg); }
+    to   { transform: translateY(110vh) rotate(360deg); }
+}
+
+.opening-card {
+    position: relative;
+    z-index: 5;
+    width: min(92vw, 520px);
+    padding: 52px 36px;
+    text-align: center;
+    border-radius: var(--card-radius);
+    background: linear-gradient(165deg, #fff7e0 0%, #ffe6c0 100%);
+    box-shadow: var(--shadow-card);
+    animation: riseIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    overflow: hidden;
+}
+
+.opening-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, var(--red), var(--saffron), var(--gold), var(--marigold));
+}
+
+.opening-tag {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(255, 143, 46, 0.14);
+    color: var(--saffron-deep);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    margin-bottom: 22px;
+}
+
+.opening-card h1 {
+    font-size: clamp(34px, 8vw, 48px);
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 16px;
+}
+
+.opening-card h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--saffron-deep), var(--red));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.opening-text {
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+@keyframes riseIn {
+    from { opacity: 0; transform: translateY(34px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==========================================================
+   Buttons
+   ========================================================== */
+
+button,
+.mapBtn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 34px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--saffron) 0%, var(--saffron-deep) 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    font-family: 'Baloo 2', sans-serif;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 6px 0 #c74a05, 0 16px 30px rgba(242, 96, 12, 0.35);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:hover,
+.mapBtn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: 0 8px 0 #c74a05, 0 20px 36px rgba(242, 96, 12, 0.4);
+}
+
+button:active,
+.mapBtn:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #c74a05, 0 8px 16px rgba(242, 96, 12, 0.3);
+}
+
+/* Shine sweep across the main CTA buttons only */
+#openInvitation::after,
+#enterBtn::after,
+.mapBtn::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -80%;
+    width: 40%;
+    height: 140%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: skewX(-20deg);
+    animation: shine 3.2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0%       { left: -80%; }
+    45%, 100% { left: 130%; }
+}
+
+/* ==========================================================
+   Main deck layout
+   ========================================================== */
+
+#mainContent {
+    display: none;
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+
+.deck {
+    position: absolute;
+    inset: 0;
+    perspective: 1400px;
+}
+
+.deck .swipe-card {
+    position: absolute;
+    top: 30px;
+    left: 16px;
+    right: 16px;
+    bottom: 96px;
+    padding: 56px 30px 40px;
+    border-radius: var(--card-radius);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    will-change: transform, opacity;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scrollbar-width: none;
+    /* Each card sets its own pastel tint via --surface-1 / --surface-2 */
+    background-color: var(--surface-1, var(--surface));
+    background-image:
+        radial-gradient(rgba(74, 21, 12, 0.06) 1.2px, transparent 1.3px),
+        linear-gradient(165deg, var(--surface-1, #fff9ec) 0%, var(--surface-2, #ffeed2) 100%);
+    background-size: 22px 22px, cover;
+}
+
+/* Center short content vertically, but allow tall content to scroll
+   from the top (justify-content: center would clip it).
+   Decorative .corner spans are absolutely positioned, so they are
+   skipped when picking the elements that receive the auto margins. */
+.deck .swipe-card > .chip {
+    margin-top: auto;
+}
+
+.deck .swipe-card > :last-child:not(.corner) {
+    margin-bottom: auto;
+}
+
+.deck .swipe-card::-webkit-scrollbar {
+    display: none;
+}
+
+/* Animated accent bar along the top of every card */
+.deck .swipe-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg,
+        var(--accent, var(--saffron)),
+        var(--accent-2, var(--gold)),
+        var(--accent, var(--saffron)));
+    background-size: 200% 100%;
+    animation: slideGradient 4s linear infinite;
+    border-radius: 0 0 6px 6px;
+}
+
+@keyframes slideGradient {
+    from { background-position: 0% 0; }
+    to   { background-position: 200% 0; }
+}
+
+/* Soft accent glow blob floating in the card corner */
+.deck .swipe-card::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: -90px;
+    right: -90px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent, var(--saffron)) 18%, transparent), transparent 70%);
+    pointer-events: none;
+    animation: blobFloat 9s ease-in-out infinite alternate;
+}
+
+@keyframes blobFloat {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-30px, 26px) scale(1.12); }
+}
+
+.deck .swipe-card.is-dragging {
+    cursor: grabbing;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.deck .swipe-card.is-dragging * {
+    pointer-events: none;
+}
+
+/* ==========================================================
+   Shared card elements
+   ========================================================== */
+
+.chip {
+    display: inline-block;
+    padding: 7px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    margin-bottom: 18px;
+    background: color-mix(in srgb, var(--accent, var(--saffron)) 14%, white);
+    color: var(--accent-text, var(--saffron-deep));
+    flex-shrink: 0;
+}
+
+.chip-light {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--gold);
+}
+
+.swipe-card h2 {
+    font-size: clamp(30px, 6vw, 42px);
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 18px;
+}
+
+.lead {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 560px;
+}
+
+.hint-text {
+    margin-top: 18px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: min(320px, 80%);
+    margin: 4px auto 22px;
+    color: var(--muted);
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent, var(--saffron)));
+    opacity: 0.45;
+}
+
+.divider::after {
+    background: linear-gradient(90deg, var(--accent, var(--saffron)), transparent);
+}
+
+/* ==========================================================
+   1 · Hero card
+   ========================================================== */
+
+.card-hero {
+    --accent: var(--saffron);
+    --accent-2: var(--gold);
+    --accent-text: var(--saffron-deep);
+    --surface-1: #fff8e1;
+    --surface-2: #ffe9c3;
+}
+
+.ganesha-wrap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+}
+
+/* Spinning sun rays behind Ganesha */
+.rays {
+    position: absolute;
+    width: min(300px, 64vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg,
+        rgba(255, 143, 46, 0.16) 0deg 11deg,
+        transparent 11deg 24deg);
+    -webkit-mask-image: radial-gradient(circle, black 30%, transparent 72%);
+    mask-image: radial-gradient(circle, black 30%, transparent 72%);
+    animation: spin 26s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.ganesha {
+    position: relative;
+    width: min(190px, 40vw);
+    animation: floaty 4s ease-in-out infinite;
+    filter: drop-shadow(0 18px 30px rgba(242, 96, 12, 0.35));
+}
+
+.spark {
+    position: absolute;
+    font-size: 22px;
+    animation: twinkle 2.2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.spark.s1 { top: 6%;   left: 4%;  animation-delay: 0s; }
+.spark.s2 { top: 18%;  right: 2%; animation-delay: 0.7s; font-size: 17px; }
+.spark.s3 { bottom: 8%; left: 12%; animation-delay: 1.3s; font-size: 15px; }
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.6) rotate(-10deg); }
+    50%      { opacity: 1;    transform: scale(1.15) rotate(10deg); }
+}
+
+@keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+}
+
+.shloka {
+    font-weight: 600;
+    color: var(--saffron-deep);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+}
+
+.card-hero h1 {
+    font-size: clamp(36px, 7vw, 56px);
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+.card-hero h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--saffron-deep), var(--red));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.card-hero button {
+    margin-top: 28px;
+}
+
+/* ==========================================================
+   2 · Invitation card
+   ========================================================== */
+
+.card-invite {
+    --accent: var(--red);
+    --accent-2: #ff9d84;
+    --accent-text: #c22315;
+    --surface-1: #fff2f0;
+    --surface-2: #ffdfd8;
+}
+
+.card-invite .marathi {
+    font-size: clamp(18px, 2.6vw, 22px);
+    line-height: 2;
+    max-width: 680px;
+    color: #7a2a12;
+    font-weight: 500;
+}
+
+/* Swaying flowers pinned in the invitation corners */
+.corner {
+    position: absolute;
+    font-size: 30px;
+    opacity: 0.9;
+    animation: sway 3.4s ease-in-out infinite;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 10px rgba(74, 21, 12, 0.2));
+}
+
+.corner.c1 { top: 20px;    left: 18px; }
+.corner.c2 { top: 20px;    right: 18px; animation-delay: -1.2s; }
+.corner.c3 { bottom: 16px; left: 18px;  animation-delay: -2s; font-size: 26px; }
+.corner.c4 { bottom: 16px; right: 18px; animation-delay: -0.6s; font-size: 26px; }
+
+@keyframes sway {
+    0%, 100% { transform: rotate(-8deg) translateY(0); }
+    50%      { transform: rotate(8deg) translateY(-5px); }
+}
+
+/* ==========================================================
+   3 · Event details card
+   ========================================================== */
+
+.card-event {
+    --accent: var(--marigold);
+    --accent-2: #ffe08a;
+    --accent-text: #a16207;
+    --surface-1: #fffbe3;
+    --surface-2: #fff0bb;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: min(560px, 100%);
+    margin-top: 10px;
+}
+
+.detail {
+    background: color-mix(in srgb, var(--accent) 5%, #fffdf6);
+    border: 2px solid rgba(247, 179, 43, 0.35);
+    border-radius: 24px;
+    padding: 22px 18px;
+    box-shadow: 0 10px 24px rgba(74, 21, 12, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.detail:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(74, 21, 12, 0.12);
+}
+
+.detail-wide {
+    grid-column: 1 / -1;
+}
+
+.detail-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    font-size: 24px;
+    background: color-mix(in srgb, var(--accent) 12%, white);
+    margin-bottom: 10px;
+}
+
+.detail h3 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-text);
+    margin-bottom: 4px;
+}
+
+.detail p {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+/* ==========================================================
+   4 · Gallery card
+   ========================================================== */
+
+.card-gallery {
+    --accent: var(--tangerine);
+    --accent-2: #ffc078;
+    --accent-text: #d3620b;
+}
+
+/* Blurred photo peeking through a soft peach wash */
+.deck .swipe-card.card-gallery {
+    --surface-1: #fff3e2;
+    background-image:
+        radial-gradient(rgba(74, 21, 12, 0.05) 1.2px, transparent 1.3px),
+        linear-gradient(180deg, rgba(255, 242, 222, 0.93), rgba(255, 231, 203, 0.86)),
+        url('gallery2.JPG');
+    background-size: 22px 22px, cover, cover;
+    background-position: center;
+}
+
+/* The slider grows to fill the card and the photo covers it */
+.slider {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 260px;
+    width: min(760px, 100%);
+    margin-top: 6px;
+}
+
+.photo-frame {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    padding: 10px;
+    background: color-mix(in srgb, var(--accent) 6%, #fffdf6);
+    border-radius: 26px;
+    box-shadow: 0 18px 40px rgba(74, 21, 12, 0.18);
+}
+
+.photo-frame img {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    object-fit: cover;
+    border-radius: 18px;
+    display: block;
+    background: #f8ecdd;
+    transition: opacity 0.35s ease;
+}
+
+/* Arrows float over the photo */
+.prev,
+.next {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 19px;
+    background: rgba(255, 250, 240, 0.9);
+    backdrop-filter: blur(6px);
+    color: var(--accent-text);
+    border: 2px solid rgba(251, 133, 0, 0.35);
+    box-shadow: 0 4px 0 rgba(211, 98, 11, 0.3), 0 10px 20px rgba(74, 21, 12, 0.15);
+}
+
+.prev { left: 22px; transform: translateY(-50%); }
+.next { right: 22px; transform: translateY(-50%); }
+
+.prev:hover,
+.next:hover {
+    filter: none;
+    transform: translateY(-50%) scale(1.06);
+    background: #fff6ea;
+    box-shadow: 0 6px 0 rgba(211, 98, 11, 0.3), 0 14px 24px rgba(74, 21, 12, 0.18);
+}
+
+.prev:active,
+.next:active {
+    transform: translateY(-50%) scale(0.96);
+    box-shadow: 0 1px 0 rgba(211, 98, 11, 0.3);
+}
+
+/* Photo counter badge */
+.photo-count {
+    position: absolute;
+    bottom: 24px;
+    right: 26px;
+    z-index: 5;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(58, 12, 4, 0.55);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    pointer-events: none;
+}
+
+/* ==========================================================
+   5 · Schedule card
+   ========================================================== */
+
+.card-schedule {
+    --accent: var(--crimson);
+    --accent-2: #f28b82;
+    --accent-text: #a61e1e;
+    --surface-1: #fff1ec;
+    --surface-2: #ffdcd1;
+}
+
+.timeline {
+    width: min(520px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+    text-align: left;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: color-mix(in srgb, var(--accent) 4%, #fffdf6);
+    border: 2px solid rgba(184, 31, 31, 0.18);
+    border-radius: 20px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 20px rgba(74, 21, 12, 0.07);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.timeline-item:hover {
+    transform: translateX(6px);
+    box-shadow: 0 12px 26px rgba(74, 21, 12, 0.11);
+}
+
+.t-emoji {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    font-size: 24px;
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--accent) 12%, white);
+}
+
+.t-body h3 {
+    font-size: 18px;
+    color: var(--ink);
+}
+
+.t-body p {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+/* ==========================================================
+   6 · Location card
+   ========================================================== */
+
+.card-location {
+    --accent: var(--gold);
+    --accent-2: #ffe08a;
+    --accent-text: #b07708;
+    --surface-1: #fff9df;
+    --surface-2: #ffedb5;
+}
+
+.address {
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* The map grows to fill the remaining card space */
+.map-frame {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 240px;
+    width: min(720px, 100%);
+    padding: 10px;
+    background: color-mix(in srgb, var(--accent) 8%, #fffdf6);
+    border-radius: 26px;
+    box-shadow: 0 16px 36px rgba(74, 21, 12, 0.14);
+    margin-bottom: 24px;
+}
+
+.map-frame iframe {
+    display: block;
+    flex: 1;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    border: 0;
+    border-radius: 18px;
+}
+
+.mapBtn {
+    background: linear-gradient(135deg, #e6452e, var(--crimson));
+    box-shadow: 0 6px 0 #8a1414, 0 16px 30px rgba(184, 31, 31, 0.35);
+}
+
+.mapBtn:hover {
+    box-shadow: 0 8px 0 #8a1414, 0 20px 36px rgba(184, 31, 31, 0.4);
+}
+
+.mapBtn:active {
+    box-shadow: 0 2px 0 #8a1414, 0 8px 16px rgba(184, 31, 31, 0.3);
+}
+
+/* ==========================================================
+   7 · Host family card
+   ========================================================== */
+
+.card-host {
+    --accent: var(--saffron);
+    --accent-2: #ffce8a;
+    --accent-text: #c05606;
+    --surface-1: #fff4e4;
+    --surface-2: #ffe2c0;
+}
+
+.host-card {
+    margin-top: 26px;
+    width: min(520px, 100%);
+    background: color-mix(in srgb, var(--accent) 5%, #fffdf6);
+    border: 2px dashed rgba(255, 143, 46, 0.6);
+    border-radius: 24px;
+    padding: 26px 22px;
+    box-shadow: 0 12px 28px rgba(74, 21, 12, 0.09);
+}
+
+.host-name {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 14px;
+}
+
+.host-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.host-tags span {
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: rgba(255, 143, 46, 0.15);
+    color: #a34a08;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* ==========================================================
+   8 · Thank you card (dark finale)
+   ========================================================== */
+
+.card-thanks {
+    --accent: var(--gold);
+    --accent-2: var(--red);
+}
+
+/* Dark finale card with a festive photo glowing underneath */
+.deck .swipe-card.card-thanks {
+    background-image:
+        linear-gradient(160deg, rgba(58, 8, 8, 0.93), rgba(122, 22, 4, 0.88)),
+        url('gallery5.JPG');
+    background-size: cover, cover;
+    background-position: center;
+}
+
+.card-thanks h2 {
+    color: #fff;
+}
+
+.card-thanks .lead {
+    color: #f3d9b8;
+}
+
+.big-morya {
+    margin-top: 26px;
+    font-size: clamp(28px, 5.5vw, 40px);
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--gold), var(--saffron));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.copyright {
+    margin-top: 28px;
+    font-size: 13px;
+    color: #d8a97e;
+}
+
+/* ==========================================================
+   Deck navigation
+   ========================================================== */
+
+.deck-ui {
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 500;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+.deck-arrow {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 16px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    box-shadow: none;
+}
+
+.deck-arrow:hover {
+    background: rgba(255, 255, 255, 0.24);
+    transform: translateY(-1px);
+    box-shadow: none;
+    filter: none;
+}
+
+.deck-arrow:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.deck-arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+    transform: none;
+}
+
+.deck-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.deck-dots button {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.25s ease, width 0.25s ease;
+}
+
+.deck-dots button:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+.deck-dots button.active {
+    width: 26px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--saffron), var(--gold));
+    animation: dotGlow 2s ease-in-out infinite;
+}
+
+@keyframes dotGlow {
+    0%, 100% { box-shadow: 0 0 6px rgba(255, 194, 62, 0.5); }
+    50%      { box-shadow: 0 0 16px rgba(255, 194, 62, 0.95); }
+}
+
+/* Swipe hint */
+.swipe-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 82px;
+    transform: translateX(-50%);
+    z-index: 500;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    pointer-events: none;
+    animation: hintPulse 1.6s ease-in-out infinite;
+    transition: opacity 0.5s ease;
+}
+
+.swipe-hint.hidden {
+    opacity: 0;
+}
+
+@keyframes hintPulse {
+    0%, 100% { transform: translateX(-50%) translateX(0); opacity: 0.85; }
+    50%      { transform: translateX(-50%) translateX(8px); opacity: 0.45; }
+}
+
+/* ==========================================================
+   WhatsApp float
+   ========================================================== */
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #25D366;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    text-decoration: none;
+    z-index: 1000;
+    box-shadow: 0 5px 0 #128c46, 0 14px 30px rgba(18, 140, 70, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-float:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 0 #128c46, 0 18px 36px rgba(18, 140, 70, 0.45);
+}
+
+.whatsapp-float:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #128c46, 0 8px 16px rgba(18, 140, 70, 0.35);
+}
+
+/* ==========================================================
+   Mobile
+   ========================================================== */
+
+@media (max-width: 768px) {
+    .deck .swipe-card {
+        top: 16px;
+        left: 10px;
+        right: 10px;
+        bottom: 88px;
+        padding: 44px 18px 32px;
+        border-radius: 26px;
+    }
+
+    .lead {
+        font-size: 15px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .detail {
+        padding: 16px 16px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-align: left;
+    }
+
+    .detail-icon {
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .slider {
+        min-height: 220px;
+    }
+
+    .prev,
+    .next {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+    }
+
+    .prev { left: 14px; }
+    .next { right: 14px; }
+
+    .photo-count {
+        bottom: 18px;
+        right: 18px;
+    }
+
+    .timeline-item {
+        padding: 12px 14px;
+    }
+
+    .t-body h3 {
+        font-size: 16px;
+    }
+
+    .map-frame {
+        min-height: 200px;
+    }
+
+    .deck-ui {
+        gap: 10px;
+        padding: 6px 10px;
+    }
+
+    .deck-arrow {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+
+    .whatsapp-float {
+        width: 52px;
+        height: 52px;
+        font-size: 26px;
+        right: 14px;
+        bottom: 88px;
+    }
+}
