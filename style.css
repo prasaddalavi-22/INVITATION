@@ -420,15 +420,27 @@ button:active,
     100% { opacity: 0; }
 }
 
-/* Center short content vertically, but allow tall content to scroll
-   from the top (justify-content: center would clip it).
-   Decorative .corner spans are absolutely positioned, so they are
-   skipped when picking the elements that receive the auto margins. */
+/* Center each page's content vertically using flex auto-margins:
+   the first visible item (.chip) gets margin-top:auto and the last
+   visible item gets margin-bottom:auto, so the whole block centers
+   in the middle when it's short. If content is taller than the
+   card, the auto margins simply collapse to 0 and the card stays
+   scrollable from the top — nothing gets clipped or unreachable.
+   Note: script.js always appends an invisible .page-fold div as the
+   very last DOM child of every card, so the real last visible piece
+   of content is always the 2nd-from-last child — that's the one that
+   needs margin-bottom:auto, not :last-child. This works in every
+   modern and older browser (unlike justify-content:safe center,
+   which some browsers — including older Safari — silently ignore). */
+.deck .swipe-card {
+    justify-content: flex-start;
+}
+
 .deck .swipe-card > .chip {
     margin-top: auto;
 }
 
-.deck .swipe-card > :last-child:not(.corner):not(.page-fold) {
+.deck .swipe-card > *:nth-last-child(2) {
     margin-bottom: auto;
 }
 
