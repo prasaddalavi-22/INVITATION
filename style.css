@@ -39,6 +39,7 @@ body {
     color: var(--ink);
     line-height: 1.6;
     overflow: hidden;
+    height: 100vh;
     height: 100dvh;
 }
 
@@ -153,6 +154,7 @@ img {
 #loadingScreen {
     position: fixed;
     inset: 0;
+    height: 100vh;
     height: 100dvh;
     display: flex;
     justify-content: center;
@@ -325,23 +327,43 @@ button:active,
 }
 
 /* ==========================================================
-   Main deck layout
+   Main deck layout (BOOK PAGE-FLIP)
    ========================================================== */
 
 #mainContent {
     display: none;
     position: fixed;
     inset: 0;
+    height: 100vh;
     height: 100dvh;
     overflow: hidden;
     opacity: 1;
     transition: opacity 0.4s ease;
 }
 
+.book-frame {
+    position: absolute;
+    inset: 0;
+}
+
 .deck {
     position: absolute;
     inset: 0;
-    perspective: 1400px;
+    perspective: 2600px;
+}
+
+.deck::before {
+    /* book spine shadow along the hinge edge */
+    content: '';
+    position: absolute;
+    top: 30px;
+    bottom: 96px;
+    left: 16px;
+    width: 40px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent);
+    z-index: 900;
+    pointer-events: none;
+    border-radius: var(--card-radius) 0 0 var(--card-radius);
 }
 
 .deck .swipe-card {
@@ -370,6 +392,32 @@ button:active,
         radial-gradient(rgba(74, 21, 12, 0.06) 1.2px, transparent 1.3px),
         linear-gradient(165deg, var(--surface-1, #fff9ec) 0%, var(--surface-2, #ffeed2) 100%);
     background-size: 22px 22px, cover;
+
+    /* --- page-flip additions --- */
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-origin: left center;
+}
+
+.page-fold {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(100deg, rgba(20, 4, 2, 0.45), rgba(20, 4, 2, 0) 42%);
+}
+
+.page-fold.is-flipping {
+    animation: pageFoldShade 0.65s ease;
+}
+
+@keyframes pageFoldShade {
+    0%   { opacity: 0; }
+    45%  { opacity: 0.6; }
+    100% { opacity: 0; }
 }
 
 /* Center short content vertically, but allow tall content to scroll
@@ -380,7 +428,7 @@ button:active,
     margin-top: auto;
 }
 
-.deck .swipe-card > :last-child:not(.corner) {
+.deck .swipe-card > :last-child:not(.corner):not(.page-fold) {
     margin-bottom: auto;
 }
 
@@ -1089,30 +1137,86 @@ button:active,
     50%      { box-shadow: 0 0 16px rgba(255, 194, 62, 0.95); }
 }
 
-/* Swipe hint */
-.swipe-hint {
+/* ==========================================================
+   Gesture hints (replace the old left/right tap arrow buttons)
+   A translucent hand glyph sits at each edge and nudges inward,
+   like a finger dragging the page — purely visual, not clickable.
+   ========================================================== */
+
+.gesture-hint {
+    position: absolute;
+    top: 50%;
+    z-index: 500;
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%);
+    pointer-events: none;
+    opacity: 0.85;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.gesture-hint.hidden {
+    opacity: 0;
+}
+
+.gesture-hint-left {
+    left: 6px;
+    transform: translateY(-50%);
+    animation: gestureNudgeLeft 2s ease-in-out infinite;
+}
+
+.gesture-hint-right {
+    right: 6px;
+    transform: translateY(-50%);
+    animation: gestureNudgeRight 2s ease-in-out infinite;
+}
+
+.gesture-hint-hand {
+    font-size: 24px;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+}
+
+.gesture-hint-left .gesture-hint-hand {
+    display: inline-block;
+    transform: scaleX(-1); /* mirror so the hand reads as dragging rightward */
+}
+
+@keyframes gestureNudgeLeft {
+    0%, 100% { transform: translateY(-50%) translateX(0);   opacity: 0.4; }
+    50%      { transform: translateY(-50%) translateX(14px); opacity: 0.95; }
+}
+
+@keyframes gestureNudgeRight {
+    0%, 100% { transform: translateY(-50%) translateX(0);    opacity: 0.4; }
+    50%      { transform: translateY(-50%) translateX(-14px); opacity: 0.95; }
+}
+
+.swipe-label {
     position: absolute;
     left: 50%;
     bottom: 82px;
     transform: translateX(-50%);
     z-index: 500;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     pointer-events: none;
-    animation: hintPulse 1.6s ease-in-out infinite;
+    animation: hintPulse 1.8s ease-in-out infinite;
     transition: opacity 0.5s ease;
 }
 
-.swipe-hint.hidden {
+.swipe-label.hidden {
     opacity: 0;
 }
 
 @keyframes hintPulse {
-    0%, 100% { transform: translateX(-50%) translateX(0); opacity: 0.85; }
-    50%      { transform: translateX(-50%) translateX(8px); opacity: 0.45; }
+    0%, 100% { opacity: 0.9; }
+    50%      { opacity: 0.5; }
 }
 
 /* ==========================================================
@@ -1146,6 +1250,34 @@ button:active,
 .whatsapp-float:active {
     transform: translateY(2px);
     box-shadow: 0 2px 0 #128c46, 0 8px 16px rgba(18, 140, 70, 0.35);
+}
+
+/* ==========================================================
+   Tablet, laptop & desktop
+   Below ~700px the book fills the screen edge-to-edge (phone
+   app feel). From ~700px up, it becomes a centered, fixed-
+   proportion card so it never stretches awkwardly wide.
+   ========================================================== */
+
+@media (min-width: 700px) {
+    .book-frame {
+        top: 50%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        width: min(94vw, 480px);
+        height: min(94vh, 860px);
+        border-radius: var(--card-radius);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+    }
+}
+
+@media (min-width: 1024px) {
+    .book-frame {
+        width: min(90vw, 520px);
+        height: min(92vh, 900px);
+    }
 }
 
 /* ==========================================================
@@ -1225,6 +1357,28 @@ button:active,
         width: 38px;
         height: 38px;
         font-size: 14px;
+    }
+
+    .swipe-label {
+        bottom: 76px;
+        font-size: 11px;
+    }
+
+    .gesture-hint {
+        width: 44px;
+        height: 44px;
+    }
+
+    .gesture-hint-hand {
+        font-size: 20px;
+    }
+
+    .gesture-hint-left {
+        left: 2px;
+    }
+
+    .gesture-hint-right {
+        right: 2px;
     }
 
     .whatsapp-float {
